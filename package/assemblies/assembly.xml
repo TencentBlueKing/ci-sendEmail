@@ -3,7 +3,6 @@
         <format>zip</format>
     </formats>
     <fileSets>
-
         <fileSet>
             <directory>${project.basedir}/target</directory>
             <outputDirectory>/</outputDirectory>
@@ -19,5 +18,4 @@
             </includes>
         </fileSet>
     </fileSets>
-
 </assembly>

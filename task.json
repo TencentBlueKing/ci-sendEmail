@@ -9,7 +9,7 @@
   },
   "input": {
     "receivers": {
-      "label": "收件人",
+      "label": "To",
       "default": "",
       "type": "vuex-input",
       "required": false,
@@ -18,7 +18,7 @@
       "isSensitive": false
     },
     "ccs": {
-      "label": "抄送人",
+      "label": " Cc",
       "default": "",
       "type": "vuex-input",
       "disabled": false,
@@ -27,8 +27,8 @@
       "isSensitive": false
     },
     "title": {
-      "label": "邮件主题",
-      "default": "蓝盾流水线【${pipeline.name}】 #${pipeline.build.num} 构建通知",
+      "label": "Subject",
+      "default": "bk pipeline【${pipeline.name}】 #${pipeline.build.num} build message",
       "type": "vuex-input",
       "required": true,
       "disabled": false,
@@ -36,7 +36,7 @@
       "isSensitive": false
     },
     "bodyFormat": {
-      "label": "邮件格式",
+      "label": "bodyFormat",
       "default": "Text",
       "type": "enum-input",
       "required": true,
@@ -45,7 +45,7 @@
       "isSensitive": false,
       "list": [
         {
-          "label": "文本",
+          "label": "Text",
           "value": "Text"
         },
         {
@@ -55,7 +55,7 @@
       ]
     },
     "content": {
-      "label": "邮件通知内容",
+      "label": "Content",
       "default": "",
       "type": "vuex-textarea",
       "required": true,
@@ -73,7 +73,7 @@
       }
     },
     "contentPath": {
-      "label": "邮件文件名相对工作空间路径",
+      "label": "contentPath",
       "default": "",
       "type": "vuex-input",
       "required": true,
