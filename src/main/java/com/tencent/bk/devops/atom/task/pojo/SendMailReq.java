@@ -30,8 +30,6 @@ public class SendMailReq implements Serializable {
     private String bkAppCode;
     @JsonProperty("bk_app_secret")
     private String bkAppSecret;
-    @JsonProperty("bk_token")
-    private String bkToken;
     @JsonProperty("bk_username")
     private String bkUsername;
 }

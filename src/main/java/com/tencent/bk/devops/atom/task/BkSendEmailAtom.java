@@ -50,7 +50,6 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
         req.setCc(param.getCcs());
         req.setBkAppCode(bkSensitiveConfInfo.get(BK_APP_CODE));
         req.setBkAppSecret(bkSensitiveConfInfo.get(BK_APP_SECRET));
-        req.setBkToken(bkSensitiveConfInfo.get(BK_TOKEN));
         req.setBkUsername(bkSensitiveConfInfo.get(BK_USERNAME));
         req.setBody_format(param.getBodyFormat());
 
