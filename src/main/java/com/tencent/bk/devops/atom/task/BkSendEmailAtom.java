@@ -7,16 +7,25 @@ import com.tencent.bk.devops.atom.spi.AtomService;
 import com.tencent.bk.devops.atom.spi.TaskAtom;
 import com.tencent.bk.devops.atom.task.pojo.EmailParam;
 import com.tencent.bk.devops.atom.task.pojo.SendMailReq;
-import com.tencent.bk.devops.atom.task.util.NotifyUtils;
 import com.tencent.bk.devops.atom.utils.json.JsonUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 import static com.tencent.bk.devops.atom.task.constant.EmailConst.*;
 
@@ -44,25 +53,16 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
 
         SendMailReq req = new SendMailReq();
         Map<String, String> bkSensitiveConfInfo = param.getBkSensitiveConfInfo();
-        req.setSender("DevOps");
+        req.setSender(bkSensitiveConfInfo.get(SENDER_EMAIL));
         req.setTitle(param.getTitle());
         req.setReceiver(param.getReceivers());
         req.setCc(param.getCcs());
-        req.setBkAppCode(bkSensitiveConfInfo.get(BK_APP_CODE));
-        req.setBkAppSecret(bkSensitiveConfInfo.get(BK_APP_SECRET));
-        req.setBkUsername(bkSensitiveConfInfo.get(BK_USERNAME));
         req.setBody_format(param.getBodyFormat());
 
         try {
             req.setContent(getContext(param));
-            String status = NotifyUtils.doPostRequest(bkSensitiveConfInfo.get(BK_HOST), req);
-            if ("true".equals(status)) {
-                result.setStatus(Status.success);
-                result.setMessage("Message delivery success...... ");
-            } else {
-                result.setStatus(Status.failure);
-                result.setMessage("Message delivery failured: " + status);
-            }
+            sendEmail(req, bkSensitiveConfInfo);
+            result.setMessage("Message delivery success...... ");
         } catch (Exception e) {
             result.setStatus(Status.failure);
             result.setMessage("Message sending Exception :" + e.getMessage());
@@ -72,19 +72,26 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
     private void checkParam(EmailParam param, AtomResult result) {
         Map<String, String> bkSensitiveConfInfo = param.getBkSensitiveConfInfo();
         StringBuilder builder = new StringBuilder();
-        if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_APP_CODE))) {
-            builder.append("bk_app_code cannot be empty | ");
+        if (bkSensitiveConfInfo.get(SMTP_HOST) == null) {
+            builder.append("smtpHost cannot be empty ");
         }
-        if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_APP_SECRET))) {
-            builder.append("bk_app_secret cannot be empty | ");
+
+        if (bkSensitiveConfInfo.get(SMTP_USER) == null) {
+            builder.append("smtpUser cannot be empty ");
         }
-        if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_HOST))) {
-            builder.append("bk_host cannot be empty | ");
+
+        if (bkSensitiveConfInfo.get(SMTP_PWD) == null) {
+            builder.append("smtpPwd cannot be empty ");
         }
-        if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_TOKEN))
-                && StringUtils.isBlank(bkSensitiveConfInfo.get(BK_USERNAME))) {
-            builder.append("bk_token or bk_username cannot be empty | ");
+
+        if (bkSensitiveConfInfo.get(SMTP_PORT) == null) {
+            builder.append("smtpPort cannot be empty ");
         }
+
+        if (bkSensitiveConfInfo.get(SENDER_EMAIL) == null) {
+            builder.append("sendEmail cannot be empty ");
+        }
+
         if (StringUtils.isBlank(param.getReceivers())) {
             builder.append("receiver cannot be empty ");
         }
@@ -117,6 +124,61 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
         } else {
             File contextFile = new File(param.getBkWorkspace(), param.getContentPath());
             return FileUtils.readFileToString(contextFile, "utf-8");
+        }
+    }
+
+    private void sendEmail(SendMailReq sendMailReq, Map<String, String> bkSensitiveConfInfo) {
+
+        // 收件人电子邮箱
+        String[] receivers = sendMailReq.getReceiver().split(",");
+        InternetAddress to_address[] = new InternetAddress[receivers.length];
+        try {
+            for (int i = 0; i < receivers.length; i++) {
+                to_address[i] = new InternetAddress(receivers[i]);
+                logger.info("send mail to : {}", receivers[i]);
+            }
+        } catch (AddressException ae) {
+            logger.warn("add receiver fail: {}", ae);
+        }
+
+        // 发件人电子邮箱
+        String from = sendMailReq.getSender();
+
+        // 指定发送邮件的主机为 localhost
+        String host = bkSensitiveConfInfo.get(SMTP_HOST);
+
+        // 获取系统属性
+        Properties properties = System.getProperties();
+
+        // 设置邮件服务器
+        properties.setProperty("mail.smtp.host", host);
+        properties.setProperty("mail.smtp.port", bkSensitiveConfInfo.get(SMTP_PORT)); // 主机端口号
+        properties.setProperty("mail.smtp.auth", "true"); // 是否需要用户认证
+        properties.setProperty("mail.smtp.starttls.enable", "true"); // 启用TLS加密
+
+        Session session = Session.getInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(bkSensitiveConfInfo.get(SMTP_USER), bkSensitiveConfInfo.get(SMTP_PWD));
+            }
+        });
+
+        // 创建默认的 MimeMessage 对象
+        MimeMessage message = new MimeMessage(session);
+
+        // Set From: 头部头字段
+        try {
+            message.setFrom(new InternetAddress(from));
+            message.setRecipients(Message.RecipientType.TO, to_address);
+            // Set Subject: 头部头字段
+            message.setSubject(sendMailReq.getTitle());
+
+            // 设置消息体
+            message.setText(sendMailReq.getContent());
+
+            // 发送消息
+            Transport.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 }
