@@ -44,7 +44,7 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
 
         SendMailReq req = new SendMailReq();
         Map<String, String> bkSensitiveConfInfo = param.getBkSensitiveConfInfo();
-        req.setSender("DevOps");
+        req.setSender(bkSensitiveConfInfo.get(SEND));
         req.setTitle(param.getTitle());
         req.setReceiver(param.getReceivers());
         req.setCc(param.getCcs());

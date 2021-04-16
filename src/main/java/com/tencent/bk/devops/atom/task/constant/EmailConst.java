@@ -12,6 +12,8 @@ public interface EmailConst {
 
     String BK_HOST = "bk_host";
 
+    String SEND = "sender";
+
     String TEXT_FORMAT = "Text";
 
     String HTML_FORMAT = "Html";
