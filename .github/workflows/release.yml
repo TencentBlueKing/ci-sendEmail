@@ -6,6 +6,7 @@ on:
 
 env:
   FILENAME: sendEmail
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 jobs:
   # This workflow contains a single job called "build"
   build:
