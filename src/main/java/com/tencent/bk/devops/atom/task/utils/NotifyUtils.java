@@ -1,25 +1,28 @@
-package com.tencent.bk.devops.atom.task.util;
+package com.tencent.bk.devops.atom.task.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.bk.devops.atom.task.pojo.SendMailReq;
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class NotifyUtils {
-
     private static final Logger logger = LoggerFactory.getLogger(NotifyUtils.class);
 
     private final static String EMAIL_URL = "/api/c/compapi/cmsi/send_mail/";
 
     private static OkHttpClient client = new OkHttpClient
-            .Builder()
-            .connectTimeout(5, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build();
+        .Builder()
+        .connectTimeout(5, TimeUnit.SECONDS)
+        .writeTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(15, TimeUnit.SECONDS)
+        .build();
 
     public static String doPostRequest(String host, SendMailReq body) throws Exception {
 

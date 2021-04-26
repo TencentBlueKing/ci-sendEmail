@@ -7,7 +7,7 @@ import com.tencent.bk.devops.atom.spi.AtomService;
 import com.tencent.bk.devops.atom.spi.TaskAtom;
 import com.tencent.bk.devops.atom.task.pojo.EmailParam;
 import com.tencent.bk.devops.atom.task.pojo.SendMailReq;
-import com.tencent.bk.devops.atom.task.util.NotifyUtils;
+import com.tencent.bk.devops.atom.task.utils.NotifyUtils;
 import com.tencent.bk.devops.atom.utils.json.JsonUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
