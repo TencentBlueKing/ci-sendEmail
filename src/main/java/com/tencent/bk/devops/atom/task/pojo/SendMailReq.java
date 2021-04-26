@@ -1,5 +1,6 @@
 package com.tencent.bk.devops.atom.task.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,6 +25,13 @@ public class SendMailReq implements Serializable {
     private String body_format;
 
     private String is_content_base64;
+
+    @JsonProperty("bk_app_code")
+    private String bkAppCode;
+    @JsonProperty("bk_app_secret")
+    private String bkAppSecret;
+    @JsonProperty("bk_username")
+    private String bkUsername;
 }
 
 // receiver	string	否	邮件接收者，包含邮件完整地址，多个以逗号分隔，若receiver、receiver__username同时存在，以receiver为准
