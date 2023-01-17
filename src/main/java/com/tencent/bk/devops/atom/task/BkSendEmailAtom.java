@@ -7,6 +7,7 @@ import com.tencent.bk.devops.atom.spi.AtomService;
 import com.tencent.bk.devops.atom.spi.TaskAtom;
 import com.tencent.bk.devops.atom.task.pojo.EmailParam;
 import com.tencent.bk.devops.atom.task.pojo.SendMailReq;
+import com.tencent.bk.devops.atom.task.pojo.SendMailResp;
 import com.tencent.bk.devops.atom.task.utils.NotifyUtils;
 import com.tencent.bk.devops.atom.utils.json.JsonUtil;
 import org.apache.commons.io.FileUtils;
@@ -59,13 +60,13 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
 
         try {
             req.setContent(getContext(param));
-            String status = NotifyUtils.doPostRequest(bkSensitiveConfInfo.get(BK_HOST), req);
-            if ("true".equals(status)) {
+            SendMailResp sendMailResp = NotifyUtils.doPostRequest(bkSensitiveConfInfo.get(BK_HOST), req);
+            if (sendMailResp.getResult()) {
                 result.setStatus(Status.success);
                 result.setMessage("Message delivery success...... ");
             } else {
                 result.setStatus(Status.failure);
-                result.setMessage("Message delivery failured: " + status);
+                result.setMessage("Message delivery failure: " + sendMailResp.getMessage());
             }
         } catch (Exception e) {
             result.setStatus(Status.failure);
