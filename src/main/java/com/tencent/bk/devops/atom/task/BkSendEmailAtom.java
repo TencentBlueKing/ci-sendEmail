@@ -11,19 +11,23 @@ import com.tencent.bk.devops.atom.task.utils.NotifyUtils;
 import com.tencent.bk.devops.atom.utils.json.JsonUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import static com.tencent.bk.devops.atom.task.constant.EmailConst.*;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.BK_APP_CODE;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.BK_APP_SECRET;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.BK_HOST;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.BK_TOKEN;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.BK_USERNAME;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.HTML_FORMAT;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.MAX_CONTEXT_FILE_SIZE;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.SEND;
+import static com.tencent.bk.devops.atom.task.constant.EmailConst.TEXT_FORMAT;
 
 @AtomService(paramClass = EmailParam.class)
 public class BkSendEmailAtom implements TaskAtom<EmailParam> {
-    private Logger logger = LoggerFactory.getLogger(BkSendEmailAtom.class);
-
     /**
      * 执行主入口
      *
@@ -33,7 +37,7 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
     public void execute(AtomContext<EmailParam> atomContext) {
         // 1.1 拿到请求参数
         EmailParam param = atomContext.getParam();
-        logger.info("context param: {}", JsonUtil.toJson(param));
+        System.out.printf("context param: %s\n", JsonUtil.toJson(param));
         // 1.2 拿到初始化好的返回结果对象
         AtomResult result = atomContext.getResult();
         // 2. 校验参数失败直接返回
@@ -107,7 +111,7 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
         if (builder.length() > 0) {
             result.setStatus(Status.failure);
             result.setMessage(builder.toString());
-            logger.error(builder.toString());
+            System.err.println(builder);
         }
     }
 
