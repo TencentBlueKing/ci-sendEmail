@@ -11,3 +11,11 @@
 - bk_username : ESB username // 蓝鲸内用户名，可为“admin”
 - sender: 邮件发送人 // 需在 开发者中心-API网关-通道管理-选择系统CMSI-搜索 发送邮件 配置相关信息。
   smtpPwd: smtp用户对应授权码。(以QQ邮箱为例：设置-> 账户-> POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV服务->生成授权码) 
+
+
+## change log
+
+v1.0.3
+
+# fix
+fix: 敏感信息修复 #27

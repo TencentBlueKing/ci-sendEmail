@@ -1,6 +1,7 @@
 package com.tencent.bk.devops.atom.task.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tencent.bk.devops.atom.utils.json.annotation.SkipLogField;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -26,8 +27,11 @@ public class SendMailReq implements Serializable {
 
     private String is_content_base64;
 
+    @SkipLogField("bk_app_code")
     @JsonProperty("bk_app_code")
     private String bkAppCode;
+
+    @SkipLogField("bk_app_secret")
     @JsonProperty("bk_app_secret")
     private String bkAppSecret;
     @JsonProperty("bk_username")

@@ -1,23 +1,19 @@
 package com.tencent.bk.devops.atom.task.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.bk.devops.atom.task.pojo.SendMailReq;
+import com.tencent.bk.devops.atom.utils.json.JsonUtil;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class NotifyUtils {
-    private static final Logger logger = LoggerFactory.getLogger(NotifyUtils.class);
-
     private final static String EMAIL_URL = "/api/c/compapi/cmsi/send_mail/";
 
-    private static OkHttpClient client = new OkHttpClient
+    private static final OkHttpClient client = new OkHttpClient
         .Builder()
         .connectTimeout(5, TimeUnit.SECONDS)
         .writeTimeout(15, TimeUnit.SECONDS)
@@ -26,14 +22,14 @@ public class NotifyUtils {
 
     public static String doPostRequest(String host, SendMailReq body) throws Exception {
 
-        String jsonBody = new ObjectMapper().writeValueAsString(body);
+        String jsonBody = JsonUtil.toJson(body);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), jsonBody);
         String url = host + EMAIL_URL;
-        logger.info("notify post url: {}, notify post body:{}", url, jsonBody);
+        System.out.printf("notify post url=%s|body=%s\n", url, JsonUtil.skipLogFields(body));
 
         Request request = new Request.Builder().url(url).post(requestBody).build();
         String result = doRequest(request);
-        logger.info("notify post request result:{}", request);
+        System.out.printf("notify post request result=%s\n", result);
 
         return result;
     }
@@ -43,7 +39,11 @@ public class NotifyUtils {
             if (response.isSuccessful()) {
                 return "true";
             } else {
-                return response.body().string();
+                if (response.body() != null) {
+                    return response.body().string();
+                } else {
+                    return null;
+                }
             }
         }
     }
