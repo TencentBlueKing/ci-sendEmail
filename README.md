@@ -16,6 +16,4 @@
 ## change log
 
 v1.0.3
-
-# fix
 fix: 敏感信息修复 #27
