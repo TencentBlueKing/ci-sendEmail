@@ -76,43 +76,44 @@ public class BkSendEmailAtom implements TaskAtom<EmailParam> {
 
     private void checkParam(EmailParam param, AtomResult result) {
         Map<String, String> bkSensitiveConfInfo = param.getBkSensitiveConfInfo();
-        StringBuilder builder = new StringBuilder();
+        StringBuilder errorMessage = new StringBuilder();
         if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_APP_CODE))) {
-            builder.append("bk_app_code cannot be empty | ");
+            errorMessage.append("bk_app_code cannot be empty | ");
         }
         if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_APP_SECRET))) {
-            builder.append("bk_app_secret cannot be empty | ");
+            errorMessage.append("bk_app_secret cannot be empty | ");
         }
         if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_HOST))) {
-            builder.append("bk_host cannot be empty | ");
+            errorMessage.append("bk_host cannot be empty | ");
         }
         if (StringUtils.isBlank(bkSensitiveConfInfo.get(BK_TOKEN))
                 && StringUtils.isBlank(bkSensitiveConfInfo.get(BK_USERNAME))) {
-            builder.append("bk_token or bk_username cannot be empty | ");
+            errorMessage.append("bk_token or bk_username cannot be empty | ");
         }
-        if (StringUtils.isBlank(param.getReceivers())) {
-            builder.append("receiver cannot be empty ");
-        }
+
+        NotifyUtils.checkReceivers(param, errorMessage);
+
         if (StringUtils.equals(param.getBodyFormat(), HTML_FORMAT)) {
             if (StringUtils.isBlank(param.getContentPath())) {
-                builder.append("contextPath cannot be empty");
+                errorMessage.append("contextPath cannot be empty");
             } else {
                 File contentFile = new File(param.getBkWorkspace(), param.getContentPath());
                 if (!contentFile.exists()) {
-                    builder.append("content file:[").append(contentFile).append("] does not exist | ");
+                    errorMessage.append("content file:[").append(contentFile).append("] does not exist | ");
                 }
                 if (!contentFile.isFile()) {
-                    builder.append("content file:[").append(contentFile).append("] must be a file |");
+                    errorMessage.append("content file:[").append(contentFile).append("] must be a file |");
                 }
                 if (contentFile.length() > MAX_CONTEXT_FILE_SIZE) {
-                    builder.append("content file:[").append(contentFile).append("] greater than 10M | ");
+                    errorMessage.append("content file:[").append(contentFile).append("] greater than 10M | ");
                 }
             }
         }
-        if (builder.length() > 0) {
+
+        if (errorMessage.length() > 0) {
             result.setStatus(Status.failure);
-            result.setMessage(builder.toString());
-            System.err.println(builder);
+            result.setMessage(errorMessage.toString());
+            System.err.println(errorMessage);
         }
     }
 
