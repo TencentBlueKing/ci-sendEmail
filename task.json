@@ -10,6 +10,7 @@
   "input": {
     "receivers": {
       "label": "To",
+      "placeholder": "Separate multiple accounts with semicolons",
       "default": "",
       "type": "vuex-input",
       "required": false,
@@ -19,6 +20,7 @@
     },
     "ccs": {
       "label": " Cc",
+      "placeholder": "Separate multiple accounts with semicolons",
       "default": "",
       "type": "vuex-input",
       "disabled": false,

@@ -2,6 +2,8 @@ package com.tencent.bk.devops.atom.task.constant;
 
 public interface EmailConst {
 
+    String WHITE_LIST = "sendmail_whitelist";
+
     String BK_APP_CODE = "bk_app_code";
 
     String BK_APP_SECRET = "bk_app_secret";
