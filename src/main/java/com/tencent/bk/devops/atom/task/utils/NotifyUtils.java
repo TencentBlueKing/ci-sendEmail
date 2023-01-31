@@ -43,7 +43,7 @@ public class NotifyUtils {
         String domainPrefix = "@";
 
         String whiteList = param.getBkSensitiveConfInfo().get(WHITE_LIST);
-        if (whiteList.isEmpty()) { // nothing skip
+        if (whiteList == null || whiteList.isEmpty()) { // nothing skip
             System.err.printf("%s is not deploy! \n", WHITE_LIST);
             return Collections.emptyList();
         }
