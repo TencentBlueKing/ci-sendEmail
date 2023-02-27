@@ -15,7 +15,6 @@ public class SendMailResp implements Serializable {
 
     @JsonProperty("request_id")
     private String requestId;
-    private String data;
 
     private Integer code;
 
