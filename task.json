@@ -14,8 +14,12 @@
     "logoUrl": "${{indexFile(\"sendEmail.png\")}}",
     "category": "TASK",
     "classifyCode": "deploy",
-    "jobType": "AGENT_LESS",
-    "os": [],
+    "jobType": "AGENT",
+    "os": [
+      "LINUX",
+      "MACOS",
+      "WINDOWS"
+    ],
     "labelCodes": [
 
     ],
