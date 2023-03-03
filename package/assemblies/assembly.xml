@@ -1,4 +1,5 @@
 <assembly>
+    <includeBaseDirectory>true</includeBaseDirectory>
     <formats>
         <format>zip</format>
     </formats>
@@ -15,6 +16,20 @@
             <outputDirectory>/</outputDirectory>
             <includes>
                 <include>*.json</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>.</directory>
+            <outputDirectory>file</outputDirectory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>images</directory>
+            <outputDirectory>file</outputDirectory>
+            <includes>
+                <include>sendEmail.png</include>
             </includes>
         </fileSet>
     </fileSets>
