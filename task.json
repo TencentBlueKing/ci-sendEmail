@@ -8,7 +8,7 @@
     "target": "$bk_java_path -jar sendEmail-jar-with-dependencies.jar"
   },
   "releaseInfo": {
-    "projectId": "Demo",
+    "projectId": "demo",
     "name": "sendEmail",
     "language": "java",
     "logoUrl": "${{indexFile(\"sendEmail.png\")}}",
