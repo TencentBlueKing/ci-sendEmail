@@ -27,3 +27,7 @@ fix: 某些网络情况下会导致发送卡住 #30
 feat: 增加发送邮件域名白名单sendmail_whitelist #32
 
 - 增加sendmail_whitelist 私有配置，用于配置允许发送的域名白名单，多个用;号分隔，输入*表示全开放, 每个邮箱域名格式为 @xxx.yyy，例如@gmail.com
+
+### v1.2.2
+- 同步更新BK发送邮件接口send_mail返回的data报文变化 #35
+- 增加可自动上架功能 #39
