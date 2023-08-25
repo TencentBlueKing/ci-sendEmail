@@ -1,5 +1,6 @@
 {
   "atomCode": "sendEmail",
+  "defaultLocaleLanguage": "en_US",
   "execution": {
     "packagePath": "sendEmail-jar-with-dependencies.jar",
     "language": "java",
@@ -29,7 +30,7 @@
       "frontendType": "NORMAL"
     },
     "versionInfo": {
-      "publisher": "admin",
+      "publisher": "BlueKing",
       "releaseType": "NEW",
       "version": "1.0.0",
       "versionContent": "init"
@@ -66,7 +67,7 @@
       "isSensitive": false
     },
     "bodyFormat": {
-      "label": "bodyFormat",
+      "label": "Content Format",
       "default": "Text",
       "type": "enum-input",
       "required": true,
@@ -103,7 +104,7 @@
       }
     },
     "contentPath": {
-      "label": "contentPath",
+      "label": "Content Path",
       "default": "",
       "type": "vuex-input",
       "required": true,
