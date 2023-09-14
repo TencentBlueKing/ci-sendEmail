@@ -40,4 +40,4 @@ jobs:
         with:
           name: ${{ env.FILENAME }}.zip
           # A file, directory or wildcard pattern that describes what to upload
-          path: ./target/${{ env.FILENAME }}.zip
+          path: ./target/${{ env.FILENAME }}-${{ github.ref_name }}.zip
